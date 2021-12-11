@@ -4,6 +4,8 @@
 #include "simp_param_container.h"
 
 unsigned int factor(unsigned int number){
+    if (number == 0)
+        return 0;
     unsigned int result = 1;
     for (int i = 2; i <= number; ++i) {
         result *= i;
@@ -19,13 +21,10 @@ int main() {
 
     std::cout << "p1!" << std::endl;
     for (int i = 0; i < 10; ++i) {
-        std::cout << "for!" << i << std::endl;
-        unsigned int fact = factor(i);
-        map_with_std_allocator.insert(std::make_pair(i, fact));
-        my_map.emplace(std::make_pair(i, fact));
+        int fact = static_cast<int>(factor(i));
+        map_with_std_allocator.insert( std::make_pair(i, fact) );
+        my_map.insert(std::make_pair(i, fact));
     }
-
-    std::cout << "p1-p2!" << std::endl;
 
     std::cout << "stl container" << std::endl;
 

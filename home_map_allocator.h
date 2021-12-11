@@ -30,41 +30,45 @@ public:
 
 
     // Constructors
-    home_map_allocator() : pool(MyPool::GetInstance()) {};
-    home_map_allocator( const home_map_allocator& other ) : pool(MyPool::GetInstance()) {};
+    home_map_allocator() : pool(MyPool::GetInstance()), current_elems_allocated_(0) {
+        size_t need_for_one = sizeof(T);
+        header_p_ = reinterpret_cast<pointer>( pool.GetNext(need_for_one, N) );
+        current_p_ = header_p_;
+    };
+    home_map_allocator( const home_map_allocator& other ) = delete;
 
     template <class U1, int M>
-    home_map_allocator(const home_map_allocator<U1, M>&) : pool(MyPool::GetInstance()) {};
+    home_map_allocator(const home_map_allocator<U1, M>&) = delete;
 
     // Destructor
-    ~home_map_allocator() {};
+    ~home_map_allocator() {
+        pool.Free(header_p_);
+    };
 
     // Returns the address of r as a pointer type. This function and the following function are used
     // to convert references to pointers.
     pointer address(reference r) const { return &r; };
     const_pointer address(const_reference r) const { return &r; };
 
-    // Allocate storage for n values of T.
-    // wouldnt work with c++17
-   // pointer allocate( size_type n, home_map_allocator<void, 0>::const_pointer hint = 0 )
     pointer allocate(std::size_t n)
     {
 
-        if(n>(N* sizeof(T))){
+        if((n + current_elems_allocated_*sizeof(T))>(N*sizeof(T))){
             throw std::out_of_range("we trying to allocate more elements than was parametrised");
         }
 
-        pointer return_value = reinterpret_cast<pointer>( pool.GetNext(n) );
+        pointer result = current_p_;
+        int elements = n/sizeof(T);
+        current_p_ = current_p_ + elements;
+        current_elems_allocated_ += elements;
 
-        if ( return_value == 0 )
-            throw std::bad_alloc();
-        return return_value;
+        return result;
     };
 
     // Deallocate storage obtained by a call to allocate.
     void deallocate(pointer p, size_type n)
     {
-        pool.Free(p);
+      p = nullptr;
     };
 
     // Return the largest possible storage available through a call to allocate.
@@ -95,6 +99,9 @@ public:
     };
 private:
     MyPool &pool;
+    int current_elems_allocated_;
+    pointer header_p_;
+    pointer current_p_;
 };
 
 

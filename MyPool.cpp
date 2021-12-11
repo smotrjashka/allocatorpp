@@ -10,8 +10,8 @@ MyPool& MyPool::GetInstance()
     return retval;
 }
 
-void* MyPool::GetNext(std::size_t& n) {
-    return malloc(n);
+void* MyPool::GetNext(std::size_t& n, int amound) {
+    return malloc(n*amound);
 }
 
 void MyPool::Free(void *ptr) {
