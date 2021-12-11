@@ -6,7 +6,7 @@ project(allocator VERSION ${PROJECT_VESRION})
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(allocator main.cpp home_map_allocator.h MyPool.cpp MyPool.h simplest_int_container.cpp simplest_int_container.h int_node.cpp int_node.h int_container_parametrized_with_allocator.h)
+add_executable(allocator main.cpp home_map_allocator.h MyPool.cpp MyPool.h Node.h simp_param_container.h)
 
 set_target_properties(
         allocator PROPERTIES

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 #include "home_map_allocator.h"
-#include "int_container_parametrized_with_allocator.h"
+#include "simp_param_container.h"
 
 unsigned int factor(unsigned int number){
     unsigned int result = 1;
@@ -46,8 +46,8 @@ int main() {
     std::cout << "p2!" << std::endl;
     ///custom container part
 
-    int_container_parametrized_with_allocator<> container_with_stl_allocator;
-    int_container_parametrized_with_allocator<home_map_allocator<int, 10>> container_with_my_allocator;
+    simp_param_container<int> container_with_stl_allocator;
+    simp_param_container<int, home_map_allocator<int, 10>> container_with_my_allocator;
     for (int i = 0; i < 10; ++i) {
         container_with_stl_allocator.insert(i);
         container_with_my_allocator.insert(i);
